@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="estate_property_type_action" model="ir.actions.act_window">
+        <field name="name">Property Types</field>
+        <field name="res_model">estate.property.type</field>
+        <field name="view_mode">tree,form,search</field>
+    </record>
+        
+    <record id="estate_property_tab" model="ir.ui.view">
+        <field name="model">estate.property.type</field>
+        <field name="arch" type="xml">
+          
+            <form>
+                <group>
+                    <h1>
+                        <field name='name'/>
+                    </h1>
+                </group>
+
+                <notebook>
+                    <page string="Description" name="description">
+                        <group>
+                            <field name="description" placeholder="Add a description..."/>
+                        </group>
+                    </page>
+
+                    <page string="Other Info" name="other_info">
+                        <group>
+                            <field name="salesman"/>
+                            <field name="buyer"/>
+                        </group>
+                    </page>
+                </notebook>
+            </form>
+        </field>
+    </record>
+    
+</odoo>

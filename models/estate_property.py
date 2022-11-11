@@ -6,13 +6,17 @@ class EstateProperty(models.Model):
     _description = "estate property model"
 
     name = fields.Char('Title', required=True)
-    description = fields.Text('Property Type')
-    postcode = fields.Char('Postcode')
-    date_availability = fields.Date('Date Availability', 
-        default=(lambda self: (fields.Datetime.now()+relativedelta(months=3)) ), copy=False)
+    tag_ids = fields.Many2many('estate.property.tag', string='Tags')
+    property_type_id = fields.Many2one('estate.property.type', string='Property Type')
     expected_price = fields.Float('Expected Price', required=True)
+    postcode = fields.Char('Postcode')
+    best_price = fields.Float('Best Offer', 
+        readonly=True, copy=False)
+    date_availability = fields.Date('Available From', 
+        default=(lambda self: (fields.Datetime.now()+relativedelta(months=3)) ), copy=False)
     selling_price = fields.Float('Selling Price', 
         readonly=True, copy=False)
+    
     active = fields.Boolean()
     state = fields.Selection(
         selection=[
@@ -34,6 +38,12 @@ class EstateProperty(models.Model):
         selection = [('north', 'North'), ('South', 'South'),
         ('east', 'East'), ('west', 'West')
         ])
+
+    salesman = fields.Many2one('res.users', string='Salesman', required=True, default=lambda self: self.env.user)
+    buyer = fields.Many2one('res.partner', string='Buyer', required=True)
+    description = fields.Text('Description')
+
+    offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offer')
 
     
 
