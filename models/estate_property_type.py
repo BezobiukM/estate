@@ -5,14 +5,15 @@ class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "estate property type model"
 
-    name = fields.Char('Property Type name', required=True)
-    description = fields.Char('Property Type descr')
-    postcode = fields.Char('Postcode')
-    date_availability = fields.Date('Availabile From', 
-        default=(lambda self: (fields.Datetime.now()+relativedelta(months=3)) ), copy=False)
+    name = fields.Char('Property Type', required=True)
     expected_price = fields.Float('Expected Price', required=True)
+    postcode = fields.Char('Postcode')
     selling_price = fields.Float('Selling Price', 
         readonly=True, copy=False)
-    salesman = fields.Char('Salesman', required=True)
-    buyer = fields.Char('Buyer', required=True)
+    date_availability = fields.Date('Availabile From', 
+        default=(lambda self: (fields.Datetime.now()+relativedelta(months=3)) ), copy=False)
+    
+    salesman = fields.Many2one('res.users', string='Salesman', required=True, default=lambda self: self.env.user)
+    buyer = fields.Many2one('res.partner', string='Buyer', required=True)
+    description = fields.Text('Description')
 
