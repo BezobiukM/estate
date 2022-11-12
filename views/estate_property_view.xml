@@ -47,6 +47,8 @@
                                 <field name="garage"/>
                                 <field name="garden"/>
                                 <field name="garden_area"/>
+                                <field name="garden_orientation"/>
+                                <field name="total_area"/>
                             </group>
                         </group>
                     </page>
@@ -57,6 +59,8 @@
                                 <tree>
                                     <field name="price"/>
                                     <field name="partner_id"/>
+                                    <field name="validity"/>
+                                    <field name="deadline"/>
                                     <field name="status"/>
                                 </tree>
                             </field>

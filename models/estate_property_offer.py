@@ -1,16 +1,33 @@
-from odoo import fields, models
+from odoo import fields, models, api
+from dateutil.relativedelta import relativedelta
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
     _description = "estate property offer model"
 
-    name = fields.Char('Offers', required=True)
+    name = fields.Char()
     price = fields.Float('Price')
+    partner_id = fields.Many2one('res.partner', string='Partner', required=True)
+    validity = fields.Integer('Validity (days)', default=7)
+    deadline = fields.Date('Deadline', 
+        compute='_compute_deadline', inverse='_inverse_deadline')
     status = fields.Selection(
         selection=[
             ('accepted', 'Accepted'),
             ('refused', 'Refused')],
-        copy=False, default='refused'
-        )
-    partner_id = fields.Many2one('res.partner', string='Partner', required=True)
+        copy=False, default=None)
     property_id = fields.Many2one('estate.property', required=True)
+
+    
+
+    create_date = fields.Date(string='Creation Date',
+        default=(lambda self: (fields.Datetime.now())))
+
+    @api.depends('validity')
+    def _compute_deadline(self):
+        for record in self:
+            record.deadline = record.create_date +relativedelta(days=record.validity)
+    
+    def _inverse_deadline(self):
+        for record in self:
+            record.validity = relativedelta(record.deadline, record.create_date).days
