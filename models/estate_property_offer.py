@@ -1,5 +1,6 @@
 from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
+from odoo.exceptions import UserError
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -9,9 +10,9 @@ class EstatePropertyOffer(models.Model):
     price = fields.Float('Price')
     partner_id = fields.Many2one('res.partner', string='Partner', required=True)
     validity = fields.Integer('Validity (days)', default=7)
-    deadline = fields.Date('Deadline', 
-        compute='_compute_deadline', inverse='_inverse_deadline')
-    status = fields.Selection(
+    deadline = fields.Date('Deadline',
+        compute='_compute_deadline',inverse='_inverse_deadline')
+    offer_status = fields.Selection(
         selection=[
             ('accepted', 'Accepted'),
             ('refused', 'Refused')],
@@ -31,3 +32,21 @@ class EstatePropertyOffer(models.Model):
     def _inverse_deadline(self):
         for record in self:
             record.validity = relativedelta(record.deadline, record.create_date).days
+
+    def action_offer_accepted(self):
+        for record in self:
+            is_accepted = record.property_id.offer_ids.filtered(lambda r:r.offer_status=='accepted')
+            if is_accepted and record not in is_accepted:
+                raise UserError('Only one offer can be accepted!')
+            record.offer_status = 'accepted'
+            record.property_id.selling_price = record.price
+            record.property_id.buyer = record.partner_id
+    
+    def action_offer_refused(self):
+        for record in self:
+            if record.offer_status == 'accepted':
+                record.property_id.selling_price = 0
+                record.property_id.buyer = None
+            record.offer_status = 'refused'
+        
+        

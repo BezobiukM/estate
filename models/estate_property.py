@@ -1,5 +1,7 @@
-from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
+from odoo import api, fields, models
+from odoo.exceptions import UserError
+
 
 class EstateProperty(models.Model):
     _name = "estate.property"
@@ -10,13 +12,13 @@ class EstateProperty(models.Model):
     property_type_id = fields.Many2one('estate.property.type', string='Property Type')
     expected_price = fields.Float('Expected Price', required=True)
     postcode = fields.Char('Postcode')
-    best_price = fields.Float('Best Offer', compute='_compute_best_price', readonly=True, copy=False, store=True)
-    date_availability = fields.Date('Available From', 
+    best_price = fields.Float('Best Offer', compute='_compute_best_price', 
+        readonly=True, copy=False, store=True)
+    date_availability = fields.Date('Available From',
         default=(lambda self: (fields.Datetime.now()+relativedelta(months=3)) ), copy=False)
-    selling_price = fields.Float('Selling Price', 
-        readonly=True, copy=False)
+    selling_price = fields.Float('Selling Price', readonly=True, copy=False)
     
-    active = fields.Boolean()
+    active = fields.Boolean('Active', default=True)
     state = fields.Selection(
         selection=[
             ('new', 'New'),
@@ -66,3 +68,29 @@ class EstateProperty(models.Model):
         else:
             self.garden_area = None
             self.garden_orientation = None
+
+    
+    
+    def action_property_sold(self):
+        for record in self:
+            if self.state == 'canceled':
+                raise UserError('Cancelled property can not be sold!')
+            record.state = 'sold'
+        return True
+
+    
+    def action_property_canceled(self):
+        for record in self:
+            if self.state == 'sold':
+                raise UserError('Sold property can not be canceled!')
+            record.state = 'canceled'
+
+        return True
+
+    @api.depends("offer_ids")
+    def _compute_selling_price(self):
+        for record in self:
+            if record.offer_ids.offer_status == "accepted":
+                record.selling_price = record.offer_ids.price
+
+    

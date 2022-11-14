@@ -5,18 +5,18 @@
         name="Real Estate"/>
 
     <menuitem 
-        id="estate_menu_advertisements" 
+        id="estate_menu_advertisements_action" 
         name="Advertisements"
         parent="estate_menu_root"/>
     
     <menuitem 
-        id="estate_property_menu_action"
+        id="estate_menu_property_action"
         action="estate_property_action" 
         name="Properties"
-        parent="estate_menu_advertisements"/>
+        parent="estate_menu_advertisements_action"/>
         
     <menuitem 
-        id="estate_menu_property_settings" 
+        id="estate_menu_property_settings_action" 
         name="Settings"
         parent="estate_menu_root"/>
 
@@ -24,12 +24,12 @@
         id="estate_property_type_menu_action"
         action="estate_property_type_action" 
         name="Property Types"
-        parent="estate_menu_property_settings"/>
+        parent="estate_menu_property_settings_action"/>
 
     <menuitem 
         id="estate_property_tag_menu_action"
         action="estate_property_tag_action" 
         name="Property Tags"
-        parent="estate_menu_property_settings"/>
+        parent="estate_menu_property_settings_action"/>
        
 </odoo>

@@ -10,7 +10,7 @@
                     <field name='partner_id'/>
                     <field name='validity'/>
                     <field name='deadline'/>
-                    <field name='status'/>
+                    <field name='offer_status'/>
                 </group>
 
             </form>
