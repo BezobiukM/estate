@@ -17,12 +17,14 @@ class EstatePropertyOffer(models.Model):
             ('accepted', 'Accepted'),
             ('refused', 'Refused')],
         copy=False, default=None)
-    property_id = fields.Many2one('estate.property', required=True)
-
-    
+    property_id = fields.Many2one('estate.property', required=True)  
 
     create_date = fields.Date(string='Creation Date',
         default=(lambda self: (fields.Datetime.now())))
+    
+    _sql_constraints = [
+        ('positive_offer_price', 'CHECK (price>0)', 'The price in offer should be grater then 0.')
+    ]
 
     @api.depends('validity')
     def _compute_deadline(self):
