@@ -1,6 +1,7 @@
 from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
+from odoo.tools.float_utils import *
 
 
 class EstateProperty(models.Model):
@@ -36,7 +37,7 @@ class EstateProperty(models.Model):
     garden_area = fields.Integer('Garden Area (sqm)')
     garden_orientation = fields.Selection(
         string = 'Garden Orientation',
-        selection = [('north', 'North'), ('South', 'South'),
+        selection = [('north', 'North'), ('s outh', 'South'),
         ('east', 'East'), ('west', 'West')
         ])
 
@@ -47,7 +48,13 @@ class EstateProperty(models.Model):
     offer_ids = fields.One2many('estate.property.offer', 'property_id', string='Offer')
 
     total_area = fields.Integer(compute="_compute_total_area", string='Total Area (sqm)', store=True)
-    
+
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK (expected_price>0)', 'The expected price should be grater then 0.'),
+        ('check_selling_price', 'CHECK (selling_price>=0)', 'The selling price should be grater then 0.'),
+        ('check_best_price', 'CHECK (best_price>0)', 'The offer price should be grater then 0.'),
+    ]
+
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
         for record in self:
@@ -68,7 +75,6 @@ class EstateProperty(models.Model):
         else:
             self.garden_area = None
             self.garden_orientation = None
-
     
     
     def action_property_sold(self):
@@ -93,4 +99,12 @@ class EstateProperty(models.Model):
             if record.offer_ids.offer_status == "accepted":
                 record.selling_price = record.offer_ids.price
 
+    @api.constrains("selling_price")
+    def _check_selling_price_value(self):
+        for record in self:
+            if float_is_zero(record.selling_price, precision_digits = 2):
+                raise ValidationError("The selling price is not set.")
+            elif float_compare(record.expected_price*0.9, record.selling_price, precision_digits = 2) > 0:
+                raise ValidationError("The offer price is less then 90 percent of expected price!")
+            
     
