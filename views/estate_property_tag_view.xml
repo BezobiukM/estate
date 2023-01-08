@@ -12,7 +12,9 @@
           
             <form>
                 <group>
-                    <field name='name'/>
+                    <tree editable='top'>
+                        <field name='name'/>
+                    </tree>
                 </group>
 
             </form>
