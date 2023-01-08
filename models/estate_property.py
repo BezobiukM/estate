@@ -27,9 +27,11 @@ class EstateProperty(models.Model):
             ('offer_received', 'Offer Received'),
             ('offer_accepted', 'Offer Accepted'),
             ('sold', 'Sold'),
-            ('canceled', 'Canceled')],
-         required=True, copy=False, default='new'
+            ('cancelled', 'Cancelled')],
+         required=True, copy=False, default='new',
+         compute='_compute_state', store=True
     )
+
     bedrooms = fields.Integer('Bedrooms', default=2)
     living_area = fields.Integer('Living Area (sqm)', required=True)
     facades = fields.Integer('Facades')
@@ -77,21 +79,19 @@ class EstateProperty(models.Model):
             self.garden_area = None
             self.garden_orientation = None
     
-    
     def action_property_sold(self):
         for record in self:
-            if self.state == 'canceled':
-                raise UserError('Cancelled property can not be sold!')
+            if record.state == 'cancelled':
+                raise UserError('Status Cancelled for property can not be changed to Sold!')
             record.state = 'sold'
         return True
 
     
-    def action_property_canceled(self):
+    def action_property_cancelled(self):
         for record in self:
-            if self.state == 'sold':
-                raise UserError('Sold property can not be canceled!')
-            record.state = 'canceled'
-
+            if record.state == 'sold':
+                raise UserError('Status Sold for property can not be changed to Cancelled!')
+            record.state = 'cancelled'
         return True
 
     @api.depends("offer_ids")
@@ -108,4 +108,14 @@ class EstateProperty(models.Model):
             elif float_compare(record.expected_price*0.9, record.selling_price, precision_digits = 2) > 0:
                 raise ValidationError("The offer price is less then 90 percent of expected price!")
             
-    
+    @api.depends("offer_ids", "offer_ids.offer_status")
+    def _compute_state(self):
+        for record in self:
+            if record.state in ('sold', 'cancelled'):
+                return
+            if any(offer.offer_status == 'accepted' for offer in record.offer_ids):
+                record.state = 'offer_accepted'
+            elif len(record.offer_ids) >= 1:
+                record.state = 'offer_received'
+            else:
+                record.state = 'new'
