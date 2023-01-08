@@ -6,12 +6,29 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-
-    <record id="estate_property_view" model="ir.ui.view">
+    <record id="estate_property_list_view" model="ir.ui.view">
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             
+            <tree decoration-success="(state=='offer_received', state=='offer_accepted')"
+                decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
+                <field name="name"/>
+                <field name="property_type_id"/>
+                <field name="postcode"/>
+                <field name="tag_ids" widget="many2many_tags" nolabel="1"
+                    options="{'color_field': 'color'}"/>
+                <field name="bedrooms"/>
+                <field name="expected_price"/>
+                <field name="selling_price"/>
+                <field name="date_availability" optional="hide"/>
+                <field name ="state" invisible="1"/>
+            </tree>
+        </field>
+    </record>
 
+    <record id="estate_property_form_view" model="ir.ui.view">
+        <field name="model">estate.property</field>
+        <field name="arch" type="xml">            
             <form>
                 <header>
                     <button name="action_property_sold" type="object" string="Sold" 
@@ -39,7 +56,6 @@
                             <field name='property_type_id' options="{'no_create_edit': True}"/> 
                             <field name='postcode'/>
                             <field name='date_availability'/>
-                            
                         </group>
 
                         <group>
@@ -71,7 +87,8 @@
                             <group>
                                 <field name="offer_ids" nolabel="1" attrs="{'readonly': ['|','|',('state', '=', 'offer_accepted'), 
                                 ('state', '=', 'sold'), ('state', '=', 'cancelled')]}">
-                                    <tree>
+                                    <tree editable="top" decoration-danger="offer_status=='refused'"
+                                         decoration-success="offer_status=='accepted'">
                                         <field name="price"/>
                                         <field name="partner_id"/>
                                         <field name="validity"/>
@@ -80,7 +97,7 @@
                                             attrs="{'invisible': ['|',('offer_status', '=', 'accepted'), ('offer_status', '=', 'refused')]}"/>
                                         <button name="action_offer_refused" type="object" icon="fa-times" 
                                             attrs="{'invisible': ['|',('offer_status', '=', 'accepted'), ('offer_status', '=', 'refused')]}"/>
-                                        <field name="offer_status"/>
+                                        <field name="offer_status" invisible='1'/>
                                     </tree>
                                 </field>
                             </group>
@@ -97,6 +114,4 @@
             </form>
         </field>
     </record>
-    
-    
 </odoo>
