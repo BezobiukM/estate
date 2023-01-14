@@ -6,12 +6,14 @@
         <field name="view_mode">tree,form,search</field>
     </record>
 
-    <record id="estate_property_tree_view" model="ir.ui.view">
+    <record id="estate_property_type_tree_view" model="ir.ui.view">
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
+        
             <tree>
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
+                <field name='offer_count'/>
             </tree>
         </field>
     </record>
@@ -19,8 +21,13 @@
     <record id="estate_property_tab" model="ir.ui.view">
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
-          
+        
             <form>
+                <div class="oe_button_box" name="button_box">
+                    <button name="estate.estate_property_offer_action" type="action" class="oe_stat_button" icon="fa-puzzle-piece">
+                        <field name="offer_count" string="Offers" widget="statinfo"/>
+                    </button> 
+                </div>
                 <group>
                     <h1>
                         <field name='name'/>
@@ -28,12 +35,7 @@
                 </group>
 
                 <notebook>
-                    <page string="Description" name="description">
-                        <group>
-                            <field name="description" placeholder="Add a description..."/>
-                        </group>
-                    </page>
-
+                    
                     <page string='Properties'>
                         <group>
                             <field name="property_ids" nolabel="1">
@@ -43,6 +45,12 @@
                                     <field name="state"/>
                                 </tree>
                             </field>
+                        </group>
+                    </page>
+
+                    <page string="Description" name="description">
+                        <group>
+                            <field name="description" placeholder="Add a description..."/>
                         </group>
                     </page>
 

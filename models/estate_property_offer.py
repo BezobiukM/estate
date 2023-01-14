@@ -18,7 +18,8 @@ class EstatePropertyOffer(models.Model):
             ('accepted', 'Accepted'),
             ('refused', 'Refused')],
         copy=False, default=None)
-    property_id = fields.Many2one('estate.property', required=True)  
+    property_id = fields.Many2one('estate.property', required=True)
+    property_type_id = fields.Many2one(related='property_id.property_type_id', store=True)  
 
     create_date = fields.Date(string='Creation Date',
         default=(lambda self: (fields.Datetime.now())))

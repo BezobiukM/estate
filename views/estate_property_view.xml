@@ -3,7 +3,7 @@
     <record id="estate_property_action" model="ir.actions.act_window">
         <field name="name">Properties</field>
         <field name="res_model">estate.property</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,form,search</field>
         <field name="context"> {'search_default_date_availability': True}</field>
     </record>
 
@@ -29,7 +29,7 @@
         </field>
     </record>
 
-    <record id="estate_property_list_view" model="ir.ui.view">
+    <record id="estate_property_tree_view" model="ir.ui.view">
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             
