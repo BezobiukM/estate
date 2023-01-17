@@ -1,6 +1,12 @@
+import logging
+
 from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
+
+
+_logger = logging.getLogger(__name__)
+
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
@@ -25,7 +31,7 @@ class EstatePropertyOffer(models.Model):
         default=(lambda self: (fields.Datetime.now())))
     
     _sql_constraints = [
-        ('positive_offer_price', 'CHECK (price>0)', 'The price in offer should be grater then 0.')
+        ('positive_offer_price', 'CHECK (price>0)', 'The price in offer should be grater than 0.')
     ]
 
     @api.depends('validity')
@@ -52,5 +58,24 @@ class EstatePropertyOffer(models.Model):
                 record.property_id.selling_price = 0
                 record.property_id.buyer = None
             record.offer_status = 'refused'
-        
-        
+    
+    @api.model
+    def create(self, vals):
+        property_record = self.env['estate.property'].browse(vals['property_id']).exists()
+        _logger.error("!!!!!!!!!!!!********create*start*********************************************")
+        _logger.error(vals)
+        _logger.error("!!!!!!!!!!!!!!!!!****create*end*************************************************")
+        if property_record and property_record.best_price > vals['price']:
+            raise UserError('The offer price must be higher than {0}!'.format(property_record.best_price))
+        return super(EstatePropertyOffer, self).create(vals)
+
+    
+    # @api.model
+    # def write(self, vals):
+    #     property_record = self.env['estate.property'].browse(vals['property_id']).exists()
+    #     _logger.error("**************write*start*vals**************************************")
+    #     _logger.error(vals)
+    #     _logger.error("**************write*end*vals**************************************")
+    #     if property_record and property_record.best_price > vals['price']:
+    #         raise UserError('The offer price must be higher than {0}!!'.format(property_record.best_price))
+    #     return super(EstatePropertyOffer, self).write(vals)
