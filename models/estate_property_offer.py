@@ -70,12 +70,12 @@ class EstatePropertyOffer(models.Model):
         return super(EstatePropertyOffer, self).create(vals)
 
     
-    # @api.model
-    # def write(self, vals):
-    #     property_record = self.env['estate.property'].browse(vals['property_id']).exists()
-    #     _logger.error("**************write*start*vals**************************************")
-    #     _logger.error(vals)
-    #     _logger.error("**************write*end*vals**************************************")
-    #     if property_record and property_record.best_price > vals['price']:
-    #         raise UserError('The offer price must be higher than {0}!!'.format(property_record.best_price))
-    #     return super(EstatePropertyOffer, self).write(vals)
+    @api.model
+    def write(self, vals):
+        property_record = self.env['estate.property']
+        _logger.error("**************write*start*vals**************************************")
+        _logger.error(vals)
+        _logger.error("**************write*end*vals**************************************")
+        if property_record and property_record.best_price > vals['price']:
+            raise UserError('The offer price must be higher than {0}!!'.format(property_record.best_price))
+        return super(EstatePropertyOffer, self).write(vals)
