@@ -18,5 +18,8 @@
         'views/res_users_views.xml',
         'views/res_partner_views.xml',
         'views/estate_menus.xml'
-        ]
+        ],
+    'installable': True,
+    'application': True,
+    'auto_install': False
 }
