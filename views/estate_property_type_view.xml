@@ -57,7 +57,7 @@
                     <page string="Other Info" name="other_info">
                         <group>
                             <field name="salesman"/>
-                            <field name="buyer"/>
+                            <field name="partner"/>
                         </group>
                     </page>
                 </notebook>

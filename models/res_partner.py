@@ -4,7 +4,7 @@ from odoo import models, fields
 class Partner(models.Model):
     _inherit = 'res.partner'
 
-    property_ids = fields.One2many('estate.property', 'buyer')
+    property_ids = fields.One2many('estate.property', 'partner')
 
     def get_properties_partner(self):
         return {
