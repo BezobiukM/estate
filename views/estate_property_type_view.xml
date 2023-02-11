@@ -6,7 +6,7 @@
         <field name="view_mode">tree,form,search</field>
     </record>
 
-    <record id="estate_property_type_tree_view" model="ir.ui.view">
+    <record id="estate_property_type_view_tree" model="ir.ui.view">
         <field name="model">estate.property.type</field>
         <field name="arch" type="xml">
         
