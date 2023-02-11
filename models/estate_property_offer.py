@@ -50,13 +50,13 @@ class EstatePropertyOffer(models.Model):
                 raise UserError('Only one offer can be accepted!')
             record.offer_status = 'accepted'
             record.property_id.selling_price = record.price
-            record.property_id.partner = record.partner_id
+            record.property_id.buyer = record.partner_id
     
     def action_offer_refused(self):
         for record in self:
             if record.offer_status == 'accepted':
                 record.property_id.selling_price = 0
-                record.property_id.partner = None
+                record.property_id.buyer = None
             record.offer_status = 'refused'
     
     @api.model
