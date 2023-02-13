@@ -8,7 +8,7 @@ class Users(models.Model):
 
     def get_properties_user(self):
         return {
-            'name': ('Property'),
+            'name': ('Real Estate Property'),
             'type': 'ir.actions.act_window',
             'res_model': 'estate.property',
             'view_mode': 'tree,form',

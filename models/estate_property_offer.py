@@ -8,7 +8,7 @@ _logger = logging.getLogger(__name__)
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
-    _description = "Estate Property Offer"
+    _description = "Real Estate Property Offer"
     _order = 'price desc'
 
     name = fields.Char()
