@@ -107,7 +107,7 @@ class EstateProperty(models.Model):
         for record in self:
             if float_is_zero(record.selling_price, precision_digits=2):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
-            elif float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
+            if float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
                     '''The offer price is less then 90 percent of the expected price!\n
                     You must reduce the expected price if you want to accept this offer.''')
@@ -141,6 +141,8 @@ class EstateProperty(models.Model):
             if record.state == 'cancelled':
                 raise UserError(
                     'Status Cancelled for property can not be changed to Sold!')
+            if float_is_zero(record.selling_price, precision_digits=2):
+                raise ValidationError("The selling price is not set. Accept an offer.") 
             record.state = 'sold'
         return True
 
