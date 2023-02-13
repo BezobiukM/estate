@@ -4,13 +4,11 @@ from odoo import fields, models, api
 from dateutil.relativedelta import relativedelta
 from odoo.exceptions import UserError
 
-
 _logger = logging.getLogger(__name__)
-
 
 class EstatePropertyOffer(models.Model):
     _name = "estate.property.offer"
-    _description = "estate property offer model"
+    _description = "Estate Property Offer"
     _order = 'price desc'
 
     name = fields.Char()

@@ -1,6 +1,9 @@
+# -*- coding: utf-8 -*-
+
 import logging
 
 from dateutil.relativedelta import relativedelta
+
 from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_is_zero, float_compare
@@ -10,8 +13,15 @@ _logger = logging.getLogger(__name__)
 
 class EstateProperty(models.Model):
     _name = "estate.property"
-    _description = "estate property model"
+    _description = "Real Estate Property"
     _order = 'id desc'
+
+    _sql_constraints = [
+        ('check_expected_price', 'CHECK (expected_price>0)',
+         'The expected price must be grater than 0.'),
+        ('check_selling_price', 'CHECK (selling_price>=0)',
+         'The selling price must be positive.'),
+    ]
 
     name = fields.Char('Title', required=True)
     tag_ids = fields.Many2many('estate.property.tag', string='Tags')
@@ -19,8 +29,7 @@ class EstateProperty(models.Model):
         'estate.property.type', string='Property Type')
     expected_price = fields.Float('Expected Price', required=True)
     postcode = fields.Char('Postcode')
-    best_price = fields.Float('Best Offer', compute='_compute_best_price',
-                              readonly=True, copy=False, store=True)
+    best_price = fields.Float('Best Offer', compute='_compute_best_price', readonly=True, copy=False, store=True, help="Best offer received")
     date_availability = fields.Date('Available From', default=(lambda self: (fields.Datetime.now()+relativedelta(months=3))), copy=False)
     selling_price = fields.Float('Selling Price', readonly=True, copy=False)
 
@@ -37,7 +46,7 @@ class EstateProperty(models.Model):
     )
 
     bedrooms = fields.Integer('Bedrooms', default=2)
-    living_area = fields.Integer('Living Area (sqm)', required=True)
+    living_area = fields.Integer('Living Area (sqm)')
     facades = fields.Integer('Facades')
     garage = fields.Boolean('Garage')
     garden = fields.Boolean('Garden')
@@ -54,19 +63,10 @@ class EstateProperty(models.Model):
     description = fields.Text('Description')
 
     offer_ids = fields.One2many(
-        'estate.property.offer', 'property_id', string='Offer')
+        'estate.property.offer', 'property_id', string='Offers')
 
     total_area = fields.Integer(
-        compute="_compute_total_area", string='Total Area (sqm)', store=True)
-
-    _sql_constraints = [
-        ('check_expected_price', 'CHECK (expected_price>0)',
-         'The expected price should be grater than 0.'),
-        ('check_selling_price', 'CHECK (selling_price>=0)',
-         'The selling price should be grater than 0.'),
-        ('check_best_price', 'CHECK (best_price>0)',
-         'The offer price should be grater than 0.'),
-    ]
+        compute="_compute_total_area", string='Total Area (sqm)', store=True, help="Total area computed by summing the living area and the garden area",)
 
     # Compute methods
     @api.depends("offer_ids")
@@ -75,8 +75,8 @@ class EstateProperty(models.Model):
             offer_prices = record.offer_ids.mapped("price")
             if offer_prices:
                 record.best_price = max(offer_prices)
-            # else:
-            #     record.best_price = None
+            else:
+                record.best_price = None
 
     @api.depends("offer_ids", "offer_ids.offer_status")
     def _compute_state(self):
@@ -109,8 +109,8 @@ class EstateProperty(models.Model):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
             elif float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
-                    '''The offer price is less then 90 percent of expected price!\n
-                    You can change the expected price.''')
+                    '''The offer price is less then 90 percent of the expected price!\n
+                    You must reduce the expected price if you want to accept this offer.''')
 
     @api.onchange('garden')
     def _onchange_garden(self):
