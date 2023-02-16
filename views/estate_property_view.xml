@@ -37,6 +37,8 @@
                 decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
                 <field name="name"/>
                 <field name="property_type_id"/>
+                <field name="salesman"/>
+                <field name="company_id"/>
                 <field name="postcode"/>
                 <field name="tag_ids" widget="many2many_tags" nolabel="1"
                     options="{'color_field': 'color'}"/>
@@ -129,7 +131,10 @@
 
                         <page string="Other Info" name="other_info">
                             <group>
-                                <field name="salesman"/>
+                                <field name="salesman" domain="[('company_id', '=', company_id)]"/>
+                                <!-- The domain allows to choose only a colleague from the user's company as a salesman. 
+                                    The problem is that the manager in multicompany mode is visible only to his colleagues from his default. -->
+                                <field name="company_id" invisible='1'/>
                                 <field name="buyer"/>
                             </group>
                         </page>

@@ -61,6 +61,8 @@ class EstateProperty(models.Model):
         'res.users', string='Salesman', required=True, default=lambda self: self.env.user)
     buyer = fields.Many2one('res.partner', string='Buyer')
     description = fields.Text('Description')
+    company_id = fields.Many2one('res.company', required=True, 
+                                 default=lambda self: self.env.user.company_id)
 
     offer_ids = fields.One2many(
         'estate.property.offer', 'property_id', string='Offers')
@@ -109,8 +111,7 @@ class EstateProperty(models.Model):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
             if float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
-                    '''The offer price is less then 90 percent of the expected price!\n
-                    You must reduce the expected price if you want to accept this offer.''')
+                    'The offer price is less then 90 percent of the expected price!\n You must reduce the expected price if you want to accept this offer.')
 
     @api.onchange('garden')
     def _onchange_garden(self):
@@ -142,7 +143,7 @@ class EstateProperty(models.Model):
                 raise UserError(
                     'Status Cancelled for property can not be changed to Sold!')
             if float_is_zero(record.selling_price, precision_digits=2):
-                raise ValidationError("The selling price is not set. Accept an offer.") 
+                raise ValidationError("The selling price is not set. You must accept an offer.") 
             record.state = 'sold'
         return True
 
