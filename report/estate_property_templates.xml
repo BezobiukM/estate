@@ -2,73 +2,78 @@
 <odoo>
     <template id="report_property_offers">
         <t t-foreach="docs" t-as="property">
+            <t t-set="company" t-value="property.company_id"/>
             <t t-call="web.html_container">
-                <t t-call="web.external_layout">
-                    <div class="page">
-                        <div class="col-md-6">
-                            <header>
-                                <table class="table">
-                                    <tbody>
-                                        <t>
-                                            <span t-field="property.company_id"/><br/>
-                                        </t>
-                                        <t>
-                                            <span t-field="property.company_id.street"/>
-                                            <span t-field="property.company_id.street2"/><br/>
-                                        </t>
-                                        <t>
-                                            <span t-field="property.company_id.city"/>
-                                            <span t-field="property.company_id.state_id"/>
-                                            <span t-field="property.company_id.zip"/><br/>
-                                        </t>
-                                        <t>
-                                            <span t-field="property.company_id.country_id"/>
-                                        </t>
-                                    </tbody>
-                                </table>
-                            </header>
+                <t t-call="estate.external_layout_estate">
+                    <div class="page" >
+                        <div class="col align-items-start">
+                            <h2>
+                                <span t-field="property.name"/><br/>
+                            </h2>
+                            <div>
+                                <strong>Salesman: </strong>
+                                <span t-field="property.salesman"/><br/>
+                            </div>
+                            <div>
+                                <strong>Expected Price: </strong>
+                                <span t-field="property.expected_price"/><br/>
+                            </div>
+                            <div>
+                                <strong>Status: </strong>
+                                <span t-field="property.state"/><br/>
+                            </div>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Price</th>
+                                        <th>Partner</th>
+                                        <th>Validity (days)</th>
+                                        <th>Deadline</th>
+                                        <th>State</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="offers" t-value="property.mapped('offer_ids')"/>
+                                    <tr t-foreach="offers" t-as="offer">
+                                        <td>
+                                            <span t-field="offer.price"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="offer.partner_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="offer.validity"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="offer.deadline"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="offer.offer_status"/>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                        <h2>
-                            <span t-field="property.name"/>
-                        </h2>
-                        <div>
-                            <strong>Expected Price: </strong>
-                            <span t-field="property.expected_price"/>
-                        </div>
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Price</th>
-                                    <th>Partner</th>
-                                    <th>Validity (days)</th>
-                                    <th>Deadline</th>
-                                    <th>State</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <t t-set="offers" t-value="property.mapped('offer_ids')"/>
-                                <tr t-foreach="offers" t-as="offer">
-                                    <td>
-                                        <span t-field="offer.price"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="offer.partner_id"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="offer.validity"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="offer.deadline"/>
-                                    </td>
-                                    <td>
-                                        <span t-field="offer.offer_status"/>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </t>
             </t>
         </t>
+    </template>
+
+    <template id="external_layout_estate" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <div class="small">
+                <strong><span t-if="company.name"><span t-field="company.name"/></span></strong><br/>
+                <span t-if="company.street" class="d-inline"><span t-field="company.street"/><span class="ml4 mr4">,</span>
+                <span t-if="company.street2" class="d-inline"><span t-field="company.street2"/></span></span><br/>
+                <span t-if="company.city" class="d-inline" t-field="company.city"><span class="ml4 mr4"></span></span>
+                <span t-if="company.state_id" class="d-inline" t-field="company.state_id"/>
+                <span t-if="company.zip" class="d-inline"><span t-field="company.zip"/><span class="ml4"></span></span><br/>
+                <span t-if="company.country_id.name" class="d-inline"><span t-field="company.country_id.name"/><span class="ml4 mr4"></span></span><br/>
+                <span t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></span><br/>
+                <span t-if="company.email"><span t-field="company.email"/></span><br/>
+                <span t-if="company.website"><span t-field="company.website"/></span><br/>
+            </div>
+        </xpath>
     </template>
 </odoo>
