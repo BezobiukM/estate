@@ -6,6 +6,7 @@
         <field name="name">res.users.view.form.inherit.estate.property</field>
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="groups_id" eval="[(4, ref('estate.estate_group_user'))]"/>
         <field name="arch" type="xml">
             <notebook>
                 <page string="Properties" name="propety_ids">
@@ -21,6 +22,7 @@
         <field name="name">res.users.simplified.form.inherit.estate.property</field>
         <field name="model">res.users</field>
         <field name="inherit_id" ref="base.view_users_simple_form"/>
+        <field name="groups_id" eval="[(4, ref('estate.estate_group_user'))]"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='phone_numbers']" position="after">
                 <group name='propety_ids' string="Properties">
