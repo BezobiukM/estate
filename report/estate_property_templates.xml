@@ -73,7 +73,6 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </t>
             </t>
@@ -113,7 +112,6 @@
             </tbody>
         </table>
     </template>
-
 
     <template id="external_layout_estate" inherit_id="web.external_layout_standard">
         <xpath expr="//div[@name='company_address']" position="replace">
@@ -158,7 +156,22 @@
                     <span t-field="company.website"/>
                 </span>
                 <br/>
+
+    <template id="external_layout_estate" inherit_id="web.external_layout_standard">
+        <xpath expr="//div[@name='company_address']" position="replace">
+            <div class="small">
+                <strong><span t-if="company.name"><span t-field="company.name"/></span></strong><br/>
+                <span t-if="company.street" class="d-inline"><span t-field="company.street"/><span class="ml4 mr4">,</span>
+                <span t-if="company.street2" class="d-inline"><span t-field="company.street2"/></span></span><br/>
+                <span t-if="company.city" class="d-inline" t-field="company.city"><span class="ml4 mr4"></span></span>
+                <span t-if="company.state_id" class="d-inline" t-field="company.state_id"/>
+                <span t-if="company.zip" class="d-inline"><span t-field="company.zip"/><span class="ml4"></span></span><br/>
+                <span t-if="company.country_id.name" class="d-inline"><span t-field="company.country_id.name"/><span class="ml4 mr4"></span></span><br/>
+                <span t-if="company.phone">Tel: <span class="o_force_ltr" t-field="company.phone"/></span><br/>
+                <span t-if="company.email"><span t-field="company.email"/></span><br/>
+                <span t-if="company.website"><span t-field="company.website"/></span><br/>
             </div>
         </xpath>
     </template>
+    
 </odoo>
