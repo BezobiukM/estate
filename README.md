@@ -1,8 +1,18 @@
-# estate
 # The Real Estate Advertisement module
 
-Content:
+# Table of contents
 
+- [The Real Estate Advertisement module](#the-real-estate-advertisement-module)
+  - [Creating The Employee](#creating-the-employee)
+  - [Security](#security)
+  - [Views](#views)
+    - [Properties View](#properties-view)
+    - [Property Form View](#property-form-view)
+    - [Property Type Form View](#property-type-form-view)
+    - [Property Type View](#property-type-view)
+    - [Property Tag View](#property-tag-view)
+    - [User View](#user-view)
+  - [Reports](#reports)
 
 ## Creating The Employee
 
@@ -10,14 +20,50 @@ Log in as Administrator.
 
 In the Settings App on the tab General Settings > Manage users or via menu Users And Companies > Users go to the Uses View and create a new user.
 
-Fill in required Name and Email fields.
+Fill in required Name and Email fields and any other you need.
 
 On the tab Access Rights choose
 * Brokerage according the user's group: **Manager** or **Agent**
 * Invoicing **Billing** or **leave empty** respectively
-* Administaration **leave empty**
+* Administration **leave empty**
 
-After saving the user date in **Action** > **Change Password** set the password.
+After saving the user data in **Action** > **Change Password** set the password.
+
+New user can log in.
+
+You can check the **Multi Companies** for your **Manager** if you need him to manage multiple companies inside the same system. So different agencies will be “siloed” from one another, with properties belonging to a given agency and users (whether agents or managers) only able to see properties linked to their agency.
+
+## Creating the Company
+
+When you log in for the first time the Administrator will be an employee of the default "My Company"
+
+To create a new company you can go to the Settings App and or on the tab General Settings click on the Manage Companies or via menu Users And Companies > Companies go to the Companies View.
+
+Fill in the required fields.
+
+## Security
+([Up](#the-real-estate-advertisement-module))
+
+According to access rights and rules: 
+* **Manager** employee 
+  * can configure the system (manage available types and tags) as well as 
+  * oversee every property in the pipeline and
+  * oversee all properties of all companies if he is a member of few of them.
+* **Agent** employee  
+  * can manage the properties under their care, or properties which are not specifically under the care of any agent and 
+  * not able update the property types or tags,
+  * not able see the Settings menu,
+  * not able to see the properties exclusive to their colleagues.
+
+* Employees who are **not** at least **Agents** will not see the real-estate application.
+
+[//]: # (* **Admin** user has manager rights.)
+
+[//]: # (TODO Give nobody the right to delete properties.)
+
+[//]: # (TODO Manager is able to oversee every property in the pipeline. In multy-company mode - all properties in allowed companies.)
+
+The new user (remember to set a password), as the Agent should only see the real estate application, and possibly the Discuss (chat) application.
 
 ## Views
 
@@ -42,12 +88,21 @@ Information you can see:
 * Living Area
 * Expected Price
 * Selling Price
-* Available From (by defult is hide)
+* Available From (by default is hide)
 
 It can be switched to **kanban** view with columns according to Property Type.
 
+Each kanban card has such information as
+* Title
+* Expected Price
+* Any of this:
+  * Best Offer Price for the status Offer Received
+  * Selling Price for the status Offer Accepted
+  * 'Sold for' for the status Sold
+* Tags
+
 ### Property Form View
-([Up](#estate))
+([Up](#the-real-estate-advertisement-module))
 
 On the **Header** of the form view there are:
 * Sold button
@@ -101,7 +156,7 @@ Each line contains such information:
 * Validity(days) (by default is set to 7)
 * Deadline (is related to Validity)
 * Offer Status 
-  * Acepted (check icon button)
+  * Accepted (check icon button)
   * Refused (X icon button)
 
 For the Property can be created many Offers but Accepted can be **only one** Offer.
@@ -115,7 +170,7 @@ The third tab **Other Info** tab with
   * Buyer (is filled with the Buyer from Accepted Offer)
 
 ### Property Type Form View
-([Up](#estate))
+([Up](#the-real-estate-advertisement-module))
 
 When creating a new Property Type or editing existed you can see
 * **Properties** tab with a list of existed corresponded 
@@ -130,7 +185,7 @@ When creating a new Property Type or editing existed you can see
 On the top right you can see the widget with the number of the offers made for all existed properties of this type and can go to their list.
 
 ### Property Type View
-([Up](#estate))
+([Up](#the-real-estate-advertisement-module))
 
 You can see it if you go to the menu Settings > Property Types.
 
@@ -141,30 +196,9 @@ It is a table with the option to re-order lines in it, making lines drag and dro
 For each Property Type you can see the [Property Type Form View](#property-type-form-view).
 
 ### Property Tag View
-([Up](#estate))
+([Up](#the-real-estate-advertisement-module))
 
 You can see it if you go to the menu Settings > Property Tags. It is a list of existed tags.
-
-## Security
-([Up](#estate))
-
-According to access rights and rules: 
-* **Manager** employee 
-  * can configure the system (manage available types and tags) as well as 
-  * oversee every property in the pipeline. 
-* **Agent** employee  
-  * can manage the properties under their care, or properties which are not specifically under the care of any agent and 
-  * not able update the property types or tags,
-  * not able see the Settings menu
-  * not able to see the properties exclusive to their colleagues.
-* **Admin** user has manager rights.
-* Employees who are **not** at least **Agents** will not see the real-estate application.
-
-TODO Give nobody the right to delete properties.
-
-TODO Manager is able to oversee every property in the pipeline. In multicompany mode - all properties in allowed companies.
-
-The new user (remember to set a password), as the Agent should only see the real estate application, and possibly the Discuss (chat) application.
 
 ### User View
 
@@ -180,11 +214,42 @@ Beside the standard information
 You can see the **Properties** tab like on the [Properties View](#properties-view) 
 
 ## Reports
-([Up](#estate))
+([Up](#the-real-estate-advertisement-module))
 
 On the [Property Form View](#property-form-view) and on the [User View](#user-view) next to the Actions button you can see the Print button. It provides the ability to create documents to send to customers and to use internally.
 
-On the Property Form View you can print a report that displays all offers for a property.
+In the header of the report you can see your company's address.
 
-On the User View you can print all of the Properties that are visible in their form view.
+On the **Property Form View** you can print a report that displays all offers for a property.
 
+The report contains the following information:
+* Title of the Property
+* Salesman name
+* Expected Price
+* Status of the Property
+* If any offer was received than for the Property Offers:
+  * Price
+  * Buyer
+  * Validity (days)
+  * Deadline
+  * State of the Offer
+
+
+On the **User View** you can print all the Properties that are visible in their form view.
+
+The report consist of 
+* Salesman name 
+
+and for each Property:
+* Title of the Property
+* Expected Price
+* Status of the Property
+* If any offer was received than for the Property Offers:
+  * Price
+  * Buyer
+  * Validity (days)
+  * Deadline
+  * State of the Offer
+
+
+(C) Maria Bezobiuk
