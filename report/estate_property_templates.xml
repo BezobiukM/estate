@@ -144,18 +144,18 @@
                     <span class="ml4 mr4"></span>
                 </span>
                 <br/>
-                <span t-if="company.phone">Tel:
-                    <span class="o_force_ltr" t-field="company.phone"/>
-                </span>
-                <br/>
-                <span t-if="company.email">
-                    <span t-field="company.email"/>
-                </span>
-                <br/>
-                <span t-if="company.website">
-                    <span t-field="company.website"/>
-                </span>
-                <br/>
+<!--                <span t-if="company.phone">Tel:-->
+<!--                    <span class="o_force_ltr" t-field="company.phone"/>-->
+<!--                </span>-->
+<!--                <br/>-->
+<!--                <span t-if="company.email">-->
+<!--                    <span t-field="company.email"/>-->
+<!--                </span>-->
+<!--                <br/>-->
+<!--                <span t-if="company.website">-->
+<!--                    <span t-field="company.website"/>-->
+<!--                </span>-->
+<!--                <br/>-->
             </div>
         </xpath>
     </template>
