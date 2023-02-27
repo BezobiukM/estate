@@ -29,12 +29,12 @@ class EstateProperty(models.Model):
         'estate.property.type', string='Property Type')
     expected_price = fields.Float('Expected Price', required=True)
     postcode = fields.Char('Postcode')
-    best_price = fields.Float('Best Offer', compute='_compute_best_price', readonly=True, copy=False, store=True, help="Best offer received")
+    best_price = fields.Float('Best Offer Price', compute='_compute_best_price', readonly=True, copy=False, store=True, help="Best offer received")
     date_availability = fields.Date('Available From', default=(lambda self: (fields.Datetime.now()+relativedelta(months=3))), copy=False)
     selling_price = fields.Float('Selling Price', readonly=True, copy=False)
 
     active = fields.Boolean('Active', default=True)
-    state = fields.Selection(
+    state = fields.Selection(string="Status",
         selection=[
             ('new', 'New'),
             ('offer_received', 'Offer Received'),
@@ -53,7 +53,7 @@ class EstateProperty(models.Model):
     garden_area = fields.Integer('Garden Area (sqm)')
     garden_orientation = fields.Selection(
         string='Garden Orientation',
-        selection=[('north', 'North'), ('s outh', 'South'),
+        selection=[('north', 'North'), ('south', 'South'),
                    ('east', 'East'), ('west', 'West')
                    ])
 
@@ -111,7 +111,7 @@ class EstateProperty(models.Model):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
             if float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
-                    'The offer price is less then 90 percent of the expected price!\n You must reduce the expected price if you want to accept this offer.')
+                    'The offer price is less than 90 percent of the expected price!\n You must reduce the expected price if you want to accept this offer.')
 
     @api.onchange('garden')
     def _onchange_garden(self):
@@ -127,12 +127,12 @@ class EstateProperty(models.Model):
     def _unlink_if_new_or_cancelled(self):
         for record in self:
             if record.state not in ('new', 'cancelled'):
-                _logger.error(
-                    "**************property_record**************************************\n")
-                _logger.error(record.state)
-                _logger.error(record.state != ('new', 'cancelled'))
-                _logger.error(
-                    "**************property_record*end*************************************")
+                # _logger.error(
+                #     "**************property_record**************************************\n")
+                # _logger.error(record.state)
+                # _logger.error(record.state != ('new', 'cancelled'))
+                # _logger.error(
+                #    "**************property_record*end*************************************")
                 raise UserError(
                     f"You can delete only the estate property with state New or Cancelled!\n Property [{record.name}] has state: {record.state}")
 
