@@ -29,8 +29,10 @@ class EstateProperty(models.Model):
         'estate.property.type', string='Property Type')
     expected_price = fields.Float('Expected Price', required=True)
     postcode = fields.Char('Postcode')
-    best_price = fields.Float('Best Offer Price', compute='_compute_best_price', readonly=True, copy=False, store=True, help="Best offer received")
-    date_availability = fields.Date('Available From', default=(lambda self: (fields.Datetime.now()+relativedelta(months=3))), copy=False)
+    best_price = fields.Float('Best Offer Price', compute='_compute_best_price',
+                              readonly=True, copy=False, store=True, help="Best offer received")
+    date_availability = fields.Date('Available From',
+                                    default=(lambda self: (fields.Datetime.now()+relativedelta(months=3))), copy=False)
     selling_price = fields.Float('Selling Price', readonly=True, copy=False)
 
     active = fields.Boolean('Active', default=True)
@@ -58,7 +60,8 @@ class EstateProperty(models.Model):
                    ])
 
     salesman = fields.Many2one(
-        'res.users', string='Salesman', required=True, default=lambda self: self.env.user)
+        'res.users', string='Salesman', required=True, default=lambda self: self.env.user,
+        domain=[('company_id', 'in', lambda self: self.env.user.company_ids)])
     buyer = fields.Many2one('res.partner', string='Buyer')
     description = fields.Text('Description')
     company_id = fields.Many2one('res.company', required=True, 
@@ -68,7 +71,8 @@ class EstateProperty(models.Model):
         'estate.property.offer', 'property_id', string='Offers')
 
     total_area = fields.Integer(
-        compute="_compute_total_area", string='Total Area (sqm)', store=True, help="Total area computed by summing the living area and the garden area",)
+        compute="_compute_total_area", string='Total Area (sqm)', store=True,
+        help="Total area computed by summing the living area and the garden area",)
 
     # Compute methods
     @api.depends("offer_ids")
@@ -103,7 +107,26 @@ class EstateProperty(models.Model):
         for record in self:
             record.total_area = record.living_area + record.garden_area
 
-    #Constraints and onchanges
+    @api.model
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
+        if domain is None:
+            domain = []
+
+        if (self.env.user.has_group('estate.estate_group_user')
+                and not self.env.user.has_group('estate.estate_group_manager')):
+            domain += [
+                '|', ('company_id', '=', False), ('company_id', 'in', self.env.user.company_ids.ids),
+                '|', ('salesman', '=', False), ('salesman', '=', self.env.user.id)]
+        elif (self.env.user.has_group('estate.estate_group_user')
+              and self.env.user.has_group('estate.estate_group_manager')):
+            domain += [
+                '|', ('company_id', '=', False), ('company_id', 'in', self.env.user.company_ids.ids)]
+
+        return super(EstateProperty, self).search_read(
+            domain=domain, fields=fields, offset=offset, limit=limit, order=order
+        )
+
+    # Constraints and onchanges
     @api.constrains("selling_price")
     def _check_selling_price_value(self):
         for record in self:
@@ -111,7 +134,8 @@ class EstateProperty(models.Model):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
             if float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
-                    'The offer price is less than 90 percent of the expected price!\n You must reduce the expected price if you want to accept this offer.')
+                    'The offer price is less than 90 percent of the expected price!\n '
+                    'You must reduce the expected price if you want to accept this offer.')
 
     @api.onchange('garden')
     def _onchange_garden(self):
@@ -134,7 +158,8 @@ class EstateProperty(models.Model):
                 # _logger.error(
                 #    "**************property_record*end*************************************")
                 raise UserError(
-                    f"You can delete only the estate property with state New or Cancelled!\n Property [{record.name}] has state: {record.state}")
+                    f"You can delete only the estate property with state New or Cancelled!\n"
+                    f" Property [{record.name}] has state: {record.state}")
 
     #actions
     def action_property_sold(self):

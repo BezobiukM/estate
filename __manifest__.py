@@ -2,12 +2,11 @@
     'name': 'Real Estate',
     'version': '1.0',
     'depends': ['base'],
-    'author': 'Bezobiuk M',
+    'author': 'Maria Bezobiuk',
     'category': 'Real Estate/Brokerage',
     'description': """
-    Description text
-    Real estate app 
-    :)
+    The Real Estate Advertisement module. 
+    Helps you manage your real estate.
     """,
     'data': [
         'security/estate_security.xml',
