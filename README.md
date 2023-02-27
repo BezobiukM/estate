@@ -4,6 +4,7 @@
 
 - [The Real Estate Advertisement module](#the-real-estate-advertisement-module)
   - [Creating The Employee](#creating-the-employee)
+  - [Creating the Company](#creating-the-company)
   - [Security](#security)
   - [Views](#views)
     - [Properties View](#properties-view)
@@ -34,6 +35,7 @@ New user can log in.
 You can check the **Multi Companies** for your **Manager** if you need him to manage multiple companies inside the same system. So different agencies will be “siloed” from one another, with properties belonging to a given agency and users (whether agents or managers) only able to see properties linked to their agency.
 
 ## Creating the Company
+([Up](#the-real-estate-advertisement-module))
 
 When you log in for the first time the Administrator will be an employee of the default "My Company"
 
@@ -66,6 +68,7 @@ According to access rights and rules:
 The new user (remember to set a password), as the Agent should only see the real estate application, and possibly the Discuss (chat) application.
 
 ## Views
+([Up](#the-real-estate-advertisement-module))
 
 There are three menus at the default view:
 * Advertisements
@@ -75,6 +78,7 @@ There are three menus at the default view:
   * [Property Tags](#property-tag-view)
 
 ### Properties View
+([Up](#the-real-estate-advertisement-module))
 
 The default view is a **table** with main Property's attributes.
 
