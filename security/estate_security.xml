@@ -15,7 +15,8 @@
         <field name="name">Manager</field>
         <field name="comment">Real estate managers can configure the system (manage available types and tags) as well as oversee every property in the pipeline.</field>
         <field name="category_id" ref="base.module_category_real_estate_brokerage"/>
-        <field name="users" eval="[Command.link(ref('base.user_admin'))]"/>
+        <field name="implied_ids" eval="[(4, ref('estate.estate_group_user'))]"/>
+<!--        <field name="users" eval="[Command.link(ref('base.user_admin'))]"/>-->
     </record>
 
     <record id="estate_group_user_rule" model="ir.rule">
