@@ -13,10 +13,10 @@ class EstatePropertyOffer(models.Model):
 
     name = fields.Char()
     price = fields.Float('Price')
-    partner_id = fields.Many2one('res.partner', string='Partner', required=True)
+    partner_id = fields.Many2one('res.partner', string='Buyer', required=True)
     validity = fields.Integer('Validity (days)', default=7)
     deadline = fields.Date('Deadline',
-        compute='_compute_deadline',inverse='_inverse_deadline')
+        compute='_compute_deadline', inverse='_inverse_deadline')
     offer_status = fields.Selection(
         selection=[
             ('accepted', 'Accepted'),
@@ -43,7 +43,7 @@ class EstatePropertyOffer(models.Model):
 
     def action_offer_accepted(self):
         for record in self:
-            is_accepted = record.property_id.offer_ids.filtered(lambda r:r.offer_status=='accepted')
+            is_accepted = record.property_id.offer_ids.filtered(lambda r: r.offer_status == 'accepted')
             if is_accepted and record not in is_accepted:
                 raise UserError('Only one offer can be accepted!')
             record.offer_status = 'accepted'
@@ -60,9 +60,9 @@ class EstatePropertyOffer(models.Model):
     @api.model
     def create(self, vals):
         property_record = self.env['estate.property'].browse(vals['property_id']).exists()
-        _logger.error("!!!!!!!!!!!!********create*start*********************************************")
-        _logger.error(vals)
-        _logger.error("!!!!!!!!!!!!!!!!!****create*end*************************************************")
+        # _logger.error("!!!!!!!!!!!!********create*start*********************************************")
+        # _logger.error(vals)
+        # _logger.error("!!!!!!!!!!!!!!!!!****create*end*************************************************")
         if property_record and property_record.best_price > vals['price']:
             raise UserError('The offer price must be higher than {0}!'.format(property_record.best_price))
         return super(EstatePropertyOffer, self).create(vals)
