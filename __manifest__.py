@@ -20,7 +20,7 @@
         'views/estate_menus.xml',
         'report/estate_property_templates.xml',
         'report/estate_property_reports.xml'
-        ],
+    ],
     'installable': True,
     'application': True,
     'auto_install': False

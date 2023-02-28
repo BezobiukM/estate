@@ -45,7 +45,7 @@
                             <strong>Salesman:</strong>
                             <span t-if="user.name" t-field="user.name"/>
                         </h3>
-                        <p></p>
+                        <p>  </p>
                         <div>
                             <div t-foreach="user.property_ids" t-as="property">
                                 <div>
@@ -68,7 +68,7 @@
                                     </span>
                                     <span t-else="">No offers have been made yet :(</span>
                                     <div>
-                                        <p></p>
+                                        <p>  </p>
                                     </div>
                                 </div>
                             </div>
@@ -117,47 +117,40 @@
         <xpath expr="//div[@name='company_address']" position="replace">
             <div class="small">
                 <strong>
-                    <span t-if="company.name">
-                        <span t-field="company.name"/>
-                    </span>
+                    <div t-if="company.name">
+                        <div t-field="company.name"/>
+                    </div>
                 </strong>
-                <br/>
-                <span t-if="company.street" class="d-inline">
+                <div t-if="company.street" class="d-inline">
                     <span t-field="company.street"/>
                     <span class="ml4 mr4">,</span>
                     <span t-if="company.street2" class="d-inline">
                         <span t-field="company.street2"/>
                     </span>
-                </span>
-                <br/>
-                <span t-if="company.city" class="d-inline" t-field="company.city">
-                    <span class="ml4 mr4"></span>
-                </span>
-                <span t-if="company.state_id" class="d-inline" t-field="company.state_id"/>
-                <span t-if="company.zip" class="d-inline">
-                    <span t-field="company.zip"/>
-                    <span class="ml4"></span>
-                </span>
-                <br/>
-                <span t-if="company.country_id.name" class="d-inline">
-                    <span t-field="company.country_id.name"/>
-                    <span class="ml4 mr4"></span>
-                </span>
-                <br/>
-<!--                <span t-if="company.phone">Tel:-->
-<!--                    <span class="o_force_ltr" t-field="company.phone"/>-->
-<!--                </span>-->
-<!--                <br/>-->
-<!--                <span t-if="company.email">-->
-<!--                    <span t-field="company.email"/>-->
-<!--                </span>-->
-<!--                <br/>-->
-<!--                <span t-if="company.website">-->
-<!--                    <span t-field="company.website"/>-->
-<!--                </span>-->
-<!--                <br/>-->
+                </div>
+                <div t-if="company.city" class="d-inline" t-field="company.city">
+                    <span class="ml4 mr4"/>
+                </div>
+                <div t-if="company.state_id" class="d-inline" t-field="company.state_id"/>
+                <div t-if="company.zip" class="d-inline">
+                    <div t-field="company.zip"/>
+                    <span class="ml4"/>
+                </div>
+                <div t-if="company.country_id.name" class="d-inline">
+                    <div t-field="company.country_id.name"/>
+                    <span class="ml4 mr4"/>
+                </div>
+                <div t-if="company.phone">Tel:
+                    <span class="o_force_ltr" t-field="company.phone"/>
+                </div>
+                <div t-if="company.email">
+                    <span t-field="company.email"/>
+                </div>
+                <div t-if="company.website">
+                    <span t-field="company.website"/>
+                </div>
             </div>
         </xpath>
     </template>
-    
+
 </odoo>

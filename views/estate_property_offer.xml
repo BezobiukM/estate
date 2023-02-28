@@ -10,7 +10,6 @@
     <record id="estate_property_offer_tab" model="ir.ui.view">
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-          
             <form>
                 <group>
                     <field name='price'/>
@@ -22,12 +21,12 @@
             </form>
         </field>
     </record>
-    
+
     <record id="estate_property_offer_tree_view" model="ir.ui.view">
         <field name="model">estate.property.offer</field>
         <field name="arch" type="xml">
-            <tree editable="top" decoration-danger="offer_status=='refused'" decoration-success="offer_status=='accepted'">
-
+            <tree editable="top" decoration-danger="offer_status=='refused'"
+                  decoration-success="offer_status=='accepted'">
                 <field name="price"/>
                 <field name="partner_id"/>
                 <field name="validity"/>
@@ -35,6 +34,5 @@
                 <field name="offer_status" invisible='1'/>
             </tree>
         </field>
-    </record>    
-    
+    </record>
 </odoo>

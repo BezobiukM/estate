@@ -32,20 +32,21 @@ class EstateProperty(models.Model):
     best_price = fields.Float('Best Offer Price', compute='_compute_best_price',
                               readonly=True, copy=False, store=True, help="Best offer received")
     date_availability = fields.Date('Available From',
-                                    default=(lambda self: (fields.Datetime.now()+relativedelta(months=3))), copy=False)
+                                    default=(lambda self: (fields.Datetime.now() + relativedelta(months=3))),
+                                    copy=False)
     selling_price = fields.Float('Selling Price', readonly=True, copy=False)
 
     active = fields.Boolean('Active', default=True)
     state = fields.Selection(string="Status",
-        selection=[
-            ('new', 'New'),
-            ('offer_received', 'Offer Received'),
-            ('offer_accepted', 'Offer Accepted'),
-            ('sold', 'Sold'),
-            ('cancelled', 'Cancelled')],
-        required=True, copy=False, default='new',
-        compute='_compute_state', store=True
-    )
+                             selection=[
+                                 ('new', 'New'),
+                                 ('offer_received', 'Offer Received'),
+                                 ('offer_accepted', 'Offer Accepted'),
+                                 ('sold', 'Sold'),
+                                 ('cancelled', 'Cancelled')],
+                             required=True, copy=False, default='new',
+                             compute='_compute_state', store=True
+                             )
 
     bedrooms = fields.Integer('Bedrooms', default=2)
     living_area = fields.Integer('Living Area (sqm)')
@@ -64,7 +65,7 @@ class EstateProperty(models.Model):
         domain=[('company_id', 'in', lambda self: self.env.user.company_ids)])
     buyer = fields.Many2one('res.partner', string='Buyer')
     description = fields.Text('Description')
-    company_id = fields.Many2one('res.company', required=True, 
+    company_id = fields.Many2one('res.company', required=True,
                                  default=lambda self: self.env.user.company_id)
 
     offer_ids = fields.One2many(
@@ -72,7 +73,7 @@ class EstateProperty(models.Model):
 
     total_area = fields.Integer(
         compute="_compute_total_area", string='Total Area (sqm)', store=True,
-        help="Total area computed by summing the living area and the garden area",)
+        help="Total area computed by summing the living area and the garden area", )
 
     # Compute methods
     @api.depends("offer_ids")
@@ -101,7 +102,7 @@ class EstateProperty(models.Model):
         for record in self:
             if record.offer_ids.offer_status == "accepted":
                 record.selling_price = record.offer_ids.price
-    
+
     @api.depends('living_area', 'garden_area')
     def _compute_total_area(self):
         for record in self:
@@ -111,28 +112,23 @@ class EstateProperty(models.Model):
     def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None):
         if domain is None:
             domain = []
-
+        domain += [
+            '|', ('company_id', '=', False), ('company_id', 'in', self.env.user.company_ids.ids)]
         if (self.env.user.has_group('estate.estate_group_user')
                 and not self.env.user.has_group('estate.estate_group_manager')):
-            domain += [
-                '|', ('company_id', '=', False), ('company_id', 'in', self.env.user.company_ids.ids),
-                '|', ('salesman', '=', False), ('salesman', '=', self.env.user.id)]
-        elif (self.env.user.has_group('estate.estate_group_user')
-              and self.env.user.has_group('estate.estate_group_manager')):
-            domain += [
-                '|', ('company_id', '=', False), ('company_id', 'in', self.env.user.company_ids.ids)]
+            domain += ['|', ('salesman', '=', False), ('salesman', '=', self.env.user.id)]
 
         return super(EstateProperty, self).search_read(
             domain=domain, fields=fields, offset=offset, limit=limit, order=order
         )
 
-    # Constraints and onchanges
+    # Constraints and onchange
     @api.constrains("selling_price")
     def _check_selling_price_value(self):
         for record in self:
             if float_is_zero(record.selling_price, precision_digits=2):
                 raise ValidationError("The selling price is not set. Fill in the required fields.")
-            if float_compare(record.expected_price*0.9, record.selling_price, precision_digits=2) > 0:
+            if float_compare(record.expected_price * 0.9, record.selling_price, precision_digits=2) > 0:
                 raise ValidationError(
                     'The offer price is less than 90 percent of the expected price!\n '
                     'You must reduce the expected price if you want to accept this offer.')
@@ -145,7 +141,7 @@ class EstateProperty(models.Model):
         else:
             self.garden_area = None
             self.garden_orientation = None
-  
+
     # CRUD methods
     @api.ondelete(at_uninstall=False)
     def _unlink_if_new_or_cancelled(self):
@@ -161,14 +157,14 @@ class EstateProperty(models.Model):
                     f"You can delete only the estate property with state New or Cancelled!\n"
                     f" Property [{record.name}] has state: {record.state}")
 
-    #actions
+    # actions
     def action_property_sold(self):
         for record in self:
             if record.state == 'cancelled':
                 raise UserError(
                     'Status Cancelled for property can not be changed to Sold!')
             if float_is_zero(record.selling_price, precision_digits=2):
-                raise ValidationError("The selling price is not set. You must accept an offer.") 
+                raise ValidationError("The selling price is not set. You must accept an offer.")
             record.state = 'sold'
         return True
 

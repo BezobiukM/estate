@@ -1,12 +1,13 @@
 from odoo import fields, models, api
 
+
 class EstatePropertyType(models.Model):
     _name = "estate.property.type"
     _description = "Real Estate Property Types"
     _order = 'sequence, name'
 
     name = fields.Char('Property Type', required=True)
-    
+
     salesman = fields.Many2one('res.users', string='Salesman', required=True, default=lambda self: self.env.user)
     buyer = fields.Many2one('res.partner', string='Buyer', required=True)
     description = fields.Text('Description')
@@ -19,12 +20,9 @@ class EstatePropertyType(models.Model):
 
     _sql_constraints = [
         ('estate_property_type_unique', 'UNIQUE (name)', 'The property type name should be unique.')
-    ]  
+    ]
 
     @api.depends('offer_ids')
     def _compute_offer_count(self):
         for record in self:
             record.offer_count = len(record.offer_ids)
-
-    
-        
