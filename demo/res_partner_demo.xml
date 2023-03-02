@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="True">
+        <record id="main_partner_estate" model="res.partner" context="{'default_is_company': True}">
+            <field name="name">Real Estate Company</field>
+            <field name="company_id" eval="None"/>
+            <field name="is_company" eval="True"/>
+            <field name="street">Flower str</field>
+            <field name="city">Kiev</field>
+            <field name="zip">04294</field>
+            <field name="phone">+380442463918</field>
+            <field name="email">rec@example.com</field>
+            <field name="image_1920" type="base64" file="estate/static/img/res_company_logo.jpg"/>
+        </record>
+
+        <record model="res.partner" id="partner_agent_estate">
+            <field name="name">Real Estate Agent Demo</field>
+            <field name="company_id" eval="None"/>
+            <field name="email">agent@example.com</field>
+            <field name="active" eval="True"/>
+        </record>
+
+        <record model="res.partner" id="partner_manager_estate">
+            <field name="name">Real Estate Manager Demo</field>
+            <field name="company_id" eval="None"/>
+            <field name="email">manager@example.com</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>
