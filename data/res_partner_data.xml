@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="True">
+        <record id="buyer_partner_estate" model="res.partner" context="{'default_is_company': False}">
+            <field name="name">Buyer Company</field>
+            <field name="company_id" eval="None"/>
+            <field name="is_company" eval="True"/>
+            <field name="street">Sunny str</field>
+            <field name="city">Kiev</field>
+            <field name="zip">01345</field>
+            <field name="phone">+380443743872</field>
+            <field name="image_1920" type="base64" file="base/static/img/res_partner_1-image.png"/>
+        </record>
+
+        <record id="partner_estate" model="res.partner">
+            <field name="name">Real Estate Buyer</field>
+            <field name="company_id" eval="None"/>
+            <field name="email">buyer@example.com</field>
+            <field name="active" eval="True"/>
+        </record>
+    </data>
+</odoo>

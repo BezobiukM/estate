@@ -9,14 +9,12 @@
     <record id="estate_property_tag" model="ir.ui.view">
         <field name="model">estate.property.tag</field>
         <field name="arch" type="xml">
-          
             <form>
                 <group>
                     <tree editable='top'>
                         <field name='name'/>
                     </tree>
                 </group>
-
             </form>
         </field>
     </record>
