@@ -30,11 +30,14 @@
         </field>
     </record>
 
+
+
     <record id="estate_property_view_tree" model="ir.ui.view">
         <field name="model">estate.property</field>
         <field name="arch" type="xml">
             <tree decoration-success="(state=='offer_received', state=='offer_accepted')"
-                  decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'">
+                  decoration-bf="state=='offer_accepted'" decoration-muted="state=='sold'"
+                  js_class="button_in_tree">
                 <field name="name"/>
                 <field name="property_type_id"/>
                 <field name="salesman"/>
