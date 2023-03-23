@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!--        Pertner Demo  -->
+    <record id="main_partner_estate" model="res.partner" context="{'default_is_company': True}">
+        <field name="name">Real Estate Company</field>
+        <field name="company_id" eval="None"/>
+        <field name="is_company" eval="True"/>
+        <field name="street">Flower str</field>
+        <field name="city">Kiev</field>
+        <field name="zip">04294</field>
+        <field name="phone">+380442463918</field>
+        <field name="email">rec@example.com</field>
+        <field name="image_1920" type="base64" file="estate/static/img/res_company_logo.jpg"/>
+    </record>
+
+    <record model="res.partner" id="partner_agent_estate">
+        <field name="name">Real Estate Agent Demo</field>
+        <field name="company_id" eval="None"/>
+        <field name="email">agent@example.com</field>
+        <field name="active" eval="True"/>
+    </record>
+
+    <record model="res.partner" id="partner_manager_estate">
+        <field name="name">Real Estate Manager Demo</field>
+        <field name="company_id" eval="None"/>
+        <field name="email">manager@example.com</field>
+        <field name="active" eval="True"/>
+    </record>
+
+     <!--        Company Demo -->
+    <record id="main_company_estate" model="res.company">
+        <field name="name">Real Estate Company Demo</field>
+        <field name="partner_id" ref="main_partner_estate"/>
+        <field name="currency_id" ref="base.UAH"/>
+        <field name="favicon" model="res.company" eval="obj()._get_default_favicon(original=True)"/>
+    </record>
+
+    <!--        Users Demo -->
+    <record id="agent_user_demo" model="res.users">
+        <field name="partner_id" ref="estate.partner_agent_estate"/>
+        <field name="login">agent_demo</field>
+        <field name="password">demo</field>
+        <field name="signature" type="xml">
+            <span>--<br/>+Agent Demo
+            </span>
+        </field>
+        <field name="company_id" ref="estate.main_company_estate"/>
+        <field name="company_ids" eval="[Command.set([ref('estate.main_company_estate')])]"/>
+        <field name="groups_id"
+               eval="[Command.set([ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        <field name="image_1920" type="base64" file="estate/static/img/res_user_1.jpg"/>
+    </record>
+
+    <record id="manager_user_demo" model="res.users">
+        <field name="partner_id" ref="estate.partner_manager_estate"/>
+        <field name="login">manager_demo</field>
+        <field name="password">demo</field>
+        <field name="signature" type="xml">
+            <span>--<br/>+Manager Demo
+            </span>
+        </field>
+        <field name="company_id" ref="estate.main_company_estate"/>
+        <field name="company_ids" eval="[Command.set([ref('estate.main_company_estate')])]"/>
+        <field name="groups_id"
+               eval="[Command.set([ref('estate.estate_group_manager'), ref('base.group_user'), ref('base.group_partner_manager'), ref('base.group_allow_export')])]"/>
+        <field name="image_1920" type="base64" file="estate/static/img/res_user_2.jpg"/>
+    </record>
+
+    <!--DEFAULT ESTATE PROPERTY TYPES-->
+        <record id="property_residential" model="estate.property.type">
+            <field name="name">Residential</field>
+            <field name="buyer" ref="estate.buyer_partner_estate"/>
+        </record>
+
+        <record id="property_commercial" model="estate.property.type">
+            <field name="name">Commercial</field>
+            <field name="buyer" ref="estate.buyer_partner_estate"/>
+        </record>
+
+        <record id="property_industrial" model="estate.property.type">
+            <field name="name">Industrial</field>
+            <field name="buyer" ref="estate.buyer_partner_estate"/>
+        </record>
+
+        <record id="property_land" model="estate.property.type">
+            <field name="name">Land</field>
+            <field name="buyer" ref="estate.buyer_partner_estate"/>
+        </record>
+
+    <!--        Estate Property Demo Data-->
+    <record id="villa" model="estate.property" context="{'default_is_company': True}">
+        <field name="name">Big Villa</field>
+        <field name="state">new</field>
+        <field name="description">A nice and big villa</field>
+        <field name="postcode">12345</field>
+        <!--        <field name="date_availability">2020-02-02</field>-->
+        <field name="expected_price">1600000</field>
+        <field name="property_type_id" ref="estate.property_residential"/>
+        <field name="bedrooms">6</field>
+        <field name="living_area">100</field>
+        <field name="facades">4</field>
+        <field name="garage" eval="True"/>
+        <field name="garden" eval="True"/>
+        <field name="garden_area">1000000</field>
+        <field name="garden_orientation">south</field>
+        <field name="salesman" ref="estate.agent_user_demo"/>
+    </record>
+
+    <record id="cozy_villa" model="estate.property">
+        <field name="name">Big Cozy Villa</field>
+        <field name="state">sold</field>
+        <field name="description">A cozy and big villa</field>
+        <field name="postcode">12345</field>
+<!--        <field name="date_availability">2020-02-02</field>-->
+        <field name="expected_price">1900000</field>
+        <field name="bedrooms">6</field>
+        <field name="living_area">120</field>
+        <field name="facades">4</field>
+        <field name="garage">True</field>
+        <field name="garden">True</field>
+        <field name="garden_area">100000</field>
+        <field name="garden_orientation">south</field>
+        <field name="property_type_id" ref="property_residential"/>
+        <field name="salesman" ref="estate.agent_user_demo"/>
+    </record>
+
+    <record id="trailer" model="estate.property" context="{'default_is_company': True}">
+        <field name="name">Trailer home</field>
+        <field name="state">cancelled</field>
+        <field name="description">Home in a trailer park</field>
+        <field name="postcode">54321</field>
+        <!--        <field name="date_availability">1970-01-01</field>-->
+        <field name="expected_price">100000</field>
+        <field name="selling_price">120000</field>
+        <field name="property_type_id" ref="estate.property_residential"/>
+        <field name="bedrooms">1</field>
+        <field name="living_area">10</field>
+        <field name="facades">4</field>
+        <field name="garage" eval="False"/>
+        <field name="garden" eval="False"/>
+        <field name="salesman" ref="estate.agent_user_demo"/>
+    </record>
+
+    <record id="tiny_villa" model="estate.property" context="{'default_is_company': True}">
+        <field name="name">Tiny Villa</field>
+        <field name="state">new</field>
+        <field name="description">A cozy and tiny villa</field>
+        <field name="postcode">12345</field>
+        <!--        <field name="date_availability">2020-02-02</field>-->
+        <field name="expected_price">900000</field>
+        <field name="property_type_id" ref="estate.property_residential"/>
+        <field name="bedrooms">3</field>
+        <field name="living_area">70</field>
+        <field name="facades">4</field>
+        <field name="garage" eval="True"/>
+        <field name="garden" eval="True"/>
+        <field name="garden_area">500000</field>
+        <field name="garden_orientation">west</field>
+        <field name="salesman" ref="estate.manager_user_demo"/>
+    </record>
+
+    <!--    Property Offers Demo -->
+    <record id="villa_offer_1" model="estate.property.offer">
+        <field name='price'>10000</field>
+        <field name='partner_id' ref="estate.buyer_partner_estate"/>
+        <field name='validity'>14</field>
+        <field name="property_id" ref="estate.villa"/>
+    </record>
+
+    <record id="villa_offer_2" model="estate.property.offer">
+        <field name='price'>1500000</field>
+        <field name='partner_id' ref="estate.buyer_partner_estate"/>
+        <field name='validity'>14</field>
+        <field name="property_id" ref="estate.villa"/>
+    </record>
+
+    <record id="villa_offer_3" model="estate.property.offer">
+        <field name='price'>1500001</field>
+        <field name='partner_id' ref="estate.partner_estate"/>
+        <field name='validity'>14</field>
+        <field name="property_id" ref="estate.villa"/>
+    </record>
+    <record id="cozy_villa_offer" model="estate.property.offer">
+        <field name='price'>1910000</field>
+        <field name='partner_id' ref="estate.partner_estate"/>
+        <field name='validity'>14</field>
+        <field name="offer_status">accepted</field>
+        <field name="property_id" ref="estate.cozy_villa"/>
+    </record>
+</odoo>
